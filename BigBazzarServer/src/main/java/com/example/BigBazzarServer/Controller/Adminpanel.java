@@ -1,5 +1,6 @@
 package com.example.BigBazzarServer.Controller;
 
+import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
 import com.example.BigBazzarServer.DTO.Request.AdminRequest;
 import com.example.BigBazzarServer.DTO.Request.UpdatePasswordRequest;
 import com.example.BigBazzarServer.Exception.*;
@@ -35,7 +36,7 @@ public class Adminpanel {
         }
         catch (EmailAlreadyExists | Useralreadycreated
                | CustomerEmailAlreadyExists | SellerEmailAlreadyExist e){
-            return new ResponseEntity<>(  e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(  e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
@@ -49,7 +50,35 @@ public class Adminpanel {
         }
         catch (AdminNotfound e){
             log.info("Admin not found");
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/")
+    public ResponseEntity<?> DeteAllcustomer(Authentication authentication){
+        log.info("DeteAllcustomer");
+        try{
+            String email =  authentication.getName();
+            String response = adminService.deletecustomer(email);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        catch (AdminNotfound e){
+            log.info("Admin not found");
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/Seller")
+    public ResponseEntity<?> DeleteSeller(Authentication authentication){
+        log.info("Deleting Seller");
+        try{
+            String email =  authentication.getName();
+            String response = adminService.deleteseller(email);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        catch (AdminNotfound e){
+            log.info("Admin not found");
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 

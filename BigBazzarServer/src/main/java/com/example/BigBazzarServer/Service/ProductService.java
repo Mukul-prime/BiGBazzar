@@ -5,6 +5,7 @@ import com.example.BigBazzarServer.DAO.ProductDAO;
 import com.example.BigBazzarServer.DAO.ReviewDAO;
 import com.example.BigBazzarServer.DAO.SellerDAO;
 import com.example.BigBazzarServer.DTO.Request.*;
+import com.example.BigBazzarServer.DTO.Response.PageResponse;
 import com.example.BigBazzarServer.DTO.Response.ProductResponse;
 import com.example.BigBazzarServer.Exception.ProductNotFound;
 import com.example.BigBazzarServer.Exception.SellerNotFound;
@@ -13,16 +14,16 @@ import com.example.BigBazzarServer.utlity.JwtService;
 import com.example.BigBazzarServer.utlity.Transformers.ProductTransformers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.example.BigBazzarServer.DTO.Response.PageResponse;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -46,18 +47,18 @@ public class ProductService {
             product.setImage(productRequest.getBanner().getBytes());
         }
 
-        Product product1 = productDAO.save(product);
+         productDAO.save(product);
 
         return "Product loaded";
     }
 
 
 
-    public List<ProductResponse> getAllProducts() {
+    public Page<ProductResponse> getAllProducts(Pageable pageable) {
 
-        List<Product> data = productDAO.findAll();
+        Page<Product> data = productDAO.findAll(pageable);
 
-        return ProductTransformers.productListToProductResponse(data);
+        return data.map(ProductTransformers::productToProductResponse);
     }
 
 //    public String PutallDataProductonlyfordevelopment_mode(List<ProductRequest> productRequest,String token){
@@ -151,7 +152,14 @@ public class ProductService {
 
     }
 
-
+/*
+* if day is 0 to 1 it returns high discount
+* if days 0 to 5 middle discount
+* if day 0 to 10 low discount
+* else return 5% discount on every product
+*
+*
+* */
     public double calculateDiscount(long daysLeft) {
         if (daysLeft <= 2) return 40;
         else if (daysLeft <= 5) return 20;
@@ -175,10 +183,16 @@ public class ProductService {
                     (product.getPrice() * discount / 100);
 
             String imageBase64 = null;
-
+//this is for image url to verify it if image is null they set null or not null is set is an image on data
             if (product.getImage() != null) {
                 imageBase64 = Base64.getEncoder().encodeToString(product.getImage());
             }
+
+
+//            LocalDate today = LocalDate.now();
+            LocalDate expireDate = product.getExpiryDate();
+            String difference = String.valueOf(ChronoUnit.DAYS.between(today, expireDate));
+// build a product response for productresponse
 
 
             return ProductResponse.builder()
@@ -188,6 +202,7 @@ public class ProductService {
                     .price(discountedPrice)
                     .category(product.getCategory())
                     .bannerurl(imageBase64)
+                    .day(difference)
                     .build();
 
         }).toList();

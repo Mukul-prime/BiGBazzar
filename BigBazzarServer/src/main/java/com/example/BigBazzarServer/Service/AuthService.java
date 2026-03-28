@@ -1,12 +1,11 @@
 package com.example.BigBazzarServer.Service;
 
-import com.example.BigBazzarServer.DAO.AdminDAO;
-import com.example.BigBazzarServer.DAO.CustomerDAO;
-import com.example.BigBazzarServer.DAO.SellerDAO;
+import com.example.BigBazzarServer.DAO.*;
 import com.example.BigBazzarServer.DTO.Request.LoginDTO;
 import com.example.BigBazzarServer.DTO.Response.LoginResponseDTO;
 import com.example.BigBazzarServer.Model.Admins;
 import com.example.BigBazzarServer.Model.Customer;
+import com.example.BigBazzarServer.Model.Deactivate;
 import com.example.BigBazzarServer.Model.Seller;
 import com.example.BigBazzarServer.utlity.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +14,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +25,8 @@ public class AuthService {
     private final CustomerDAO customerDAO;
     private final SellerDAO sellerDAO;
     private final AdminDAO adminDAO;
+    private final DeleteCustomerDAO deleteCustomerDAO;
+    private final SellerDeactives sellerDeactives;
 
 
     private void authenticate(String email, String password) {
@@ -41,7 +43,7 @@ public class AuthService {
         }
     }
 
-
+    @Transactional
     public LoginResponseDTO customerLogin(LoginDTO dto) {
 
         System.out.println(dto.getEmail()+" "+ dto.getPassword());
@@ -57,6 +59,7 @@ public class AuthService {
 
 
         authenticate(email, dto.getPassword());
+       deleteCustomerDAO.deactivateCustomer(customer.getCustomerId());
 
         String token = jwtService.generateToken(
                 customer.getRoles(),
@@ -69,7 +72,7 @@ public class AuthService {
                 customer.getRoles()
         );
     }
-
+    @Transactional
     public LoginResponseDTO sellerLogin(LoginDTO dto) {
 
         authenticate(dto.getEmail(), dto.getPassword());
@@ -78,6 +81,7 @@ public class AuthService {
         if (seller == null) {
             throw new BadCredentialsException("Seller not found");
         }
+        sellerDeactives.deactivateCustomer(seller.getSellerId());
 
         String token = jwtService.generateToken(
                 seller.getRoles(),

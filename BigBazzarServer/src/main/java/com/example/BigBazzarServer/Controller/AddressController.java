@@ -37,7 +37,7 @@ public class AddressController {
             AddressResponse response = addressService.createAddress(addressRequest);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         }catch (CityNotFound | StateNotFounded | CustomerNotFound e ){
-            return new ResponseEntity<>(e.getMessage() , HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage() , HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
 

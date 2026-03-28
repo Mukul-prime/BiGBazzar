@@ -213,5 +213,21 @@ public class SellerController {
         }
     }
 
+    @PostMapping("/deactive")
+    public ResponseEntity<?> deactiveid(Authentication authentication){
+        log.info(authentication.getName());
+        try{
+            String email = authentication.getName();
+            String response =  sellerService.deactivateUser(email);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        }
+        catch (SellerNotFound w) {
+            log.warn("seller Not founded");
+            return new ResponseEntity<>(w.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
 
 }

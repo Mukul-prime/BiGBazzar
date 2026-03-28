@@ -45,7 +45,7 @@ public class CustomerController {
         }
         catch (CustomerAlreadyExist e)
         {
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.CONFLICT);
         }
     }
 
@@ -55,10 +55,10 @@ public class CustomerController {
         try {
             String email = authentication.getName();
             String ans = customerService.updateName(informationRequests , email);
-            return new ResponseEntity<>(ans , HttpStatus.OK);
+            return new ResponseEntity<>(ans , HttpStatus.ACCEPTED);
         }
         catch (CustomerNotCreated e){
-            return new ResponseEntity<>(e.getMessage() , HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage() , HttpStatus.NOT_FOUND);
         }
 
     }
@@ -70,9 +70,9 @@ public class CustomerController {
         try{
             String email =  authentication.getName();
             String response = customerService.UpdateEmail(changeEmail , email);
-            return new ResponseEntity<>(response,HttpStatus.OK);
+            return new ResponseEntity<>(response,HttpStatus.ACCEPTED);
         }catch (CustomerNotFound e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
         }
     }
 //update year
@@ -85,10 +85,10 @@ public class CustomerController {
             String email = authentication.getName();
 
             String response = customerService.updateYear(updateYear ,email );
-            return new ResponseEntity<>(response,HttpStatus.OK);
+            return new ResponseEntity<>(response,HttpStatus.ACCEPTED);
         }
         catch (CustomerNotFound e){
-            return new ResponseEntity<>(e.getMessage() , HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage() , HttpStatus.NOT_FOUND);
         }
     }
 
@@ -100,9 +100,9 @@ public class CustomerController {
         try {
             String email = authentication.getName();
             CustomerResponse customerResponse = customerService.getCustomer(email);
-            return new ResponseEntity<>(customerResponse, HttpStatus.OK);
+            return new ResponseEntity<>(customerResponse, HttpStatus.ACCEPTED);
         }catch (CustomerNotFound e){
-            return new ResponseEntity<>(e.getMessage() , HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage() , HttpStatus.NOT_FOUND);
         }
     }
 
@@ -115,10 +115,10 @@ public class CustomerController {
             String email = authentication.getName();
 
             String response = otpService.IsVerfiedPlease(verifiedOTP , email);
-            return new ResponseEntity<>(response,HttpStatus.OK);
+            return new ResponseEntity<>(response,HttpStatus.ACCEPTED);
         }
         catch (CustomerNotFound e){
-            return new ResponseEntity<>(e.getMessage() , HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage() , HttpStatus.NOT_FOUND);
         }
    }
 
@@ -130,10 +130,10 @@ public class CustomerController {
         try{
             String email = authentication.getName();
             String response = customerService.UpdatePassword(email,updatePasswordRequest);
-            return new ResponseEntity<>(response,HttpStatus.OK);
+            return new ResponseEntity<>(response,HttpStatus.ACCEPTED);
         }
         catch (CustomerNotFound e){
-            return new ResponseEntity<>(e.getMessage() , HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage() , HttpStatus.NOT_FOUND);
         }
    }
 //   @GetMapping("/name/{name}")
@@ -165,6 +165,19 @@ public class CustomerController {
             return new ResponseEntity<>(e.getMessage() , HttpStatus.NOT_FOUND);
         }
 
+    }
+
+    @PostMapping("/Deactive")
+    public ResponseEntity<?> DeactiveUser(Authentication authentication){
+        log.info("Input Receivings"+authentication.getName());
+        try{
+            String email = authentication.getName();
+            String response = customerService.deactivateUser(email);
+            return new ResponseEntity<>(response,HttpStatus.ACCEPTED);
+        }
+        catch (CustomerNotFound e){
+            return new ResponseEntity<>(e.getMessage() , HttpStatus.NOT_FOUND);
+        }
     }
 
 

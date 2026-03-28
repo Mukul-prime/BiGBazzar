@@ -2,6 +2,8 @@ package com.example.BigBazzarServer.DAO;
 
 import com.example.BigBazzarServer.Model.Product;
 import com.example.BigBazzarServer.utlity.Enum.Category;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,7 +14,7 @@ import java.util.Set;
 
 public interface ProductDAO extends JpaRepository<Product ,Integer> {
 
-//    List<Product> findAll();
+
 
     @Query("SELECT p FROM Product p WHERE p.name = :name")
     List<Product> getByname(@Param("name") String name);
@@ -28,4 +30,5 @@ public interface ProductDAO extends JpaRepository<Product ,Integer> {
             @Param("futureDate") LocalDate futureDate
     );
 
+    List<Product> findBySeller_sellerId(int sellerId);
 }

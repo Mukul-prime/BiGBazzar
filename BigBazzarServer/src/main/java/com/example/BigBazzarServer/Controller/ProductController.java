@@ -8,6 +8,8 @@ import com.example.BigBazzarServer.Exception.SellerNotFound;
 import com.example.BigBazzarServer.Service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,10 +45,10 @@ public class ProductController {
 
 //    get all product
     @GetMapping("/Products")
-    public ResponseEntity<?> GetAllProducts() {
+    public ResponseEntity<?> GetAllProducts(Pageable pageable) {
         log.info("Getting all products");
 
-        List<ProductResponse> data = productService.getAllProducts();
+        Page<ProductResponse> data = productService.getAllProducts(pageable);
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 

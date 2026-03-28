@@ -40,6 +40,8 @@ public class SellerService {
 
     @Autowired public NotificationDAO notificationDAO;
 
+    @Autowired public SellerDeactives sellerDeactives;
+
 
     PasswordEncoder  passwordEncoder = new BCryptPasswordEncoder();
 
@@ -225,6 +227,30 @@ public class SellerService {
         notificationBox.setNotified(true);
         notificationBoxs.save(notificationBox);
         return "Notification Launch";
+    }
+
+
+    public String deactivateUser(String email) {
+
+        Seller seller = sellerDAO.findByEmail(email);
+        if (seller == null) {
+            throw new SellerNotFound("Seller not exist");
+        }
+
+        SellerDeactive deactivate = sellerDeactives
+                .findBySeller_sellerId(seller.getSellerId());
+
+        if (deactivate == null) {
+            deactivate = SellerDeactive.builder()
+                    .seller(seller)
+                    .build();
+        }
+
+        deactivate.setActive(true);
+
+        sellerDeactives.save(deactivate);
+
+        return "User Deactivated Successfully";
     }
 
 }

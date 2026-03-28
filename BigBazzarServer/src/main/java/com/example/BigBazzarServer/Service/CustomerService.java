@@ -17,6 +17,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.BigBazzarServer.Custome_methods.OTP_GENERATOR.generateOTP;
 //import static com.example.BigBazzarServer.Service.OTPService.sendEmail;
@@ -33,6 +34,7 @@ public class CustomerService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private final DeleteCustomerDAO deleteCustomerDAO;
 
     private final CustomerDAO customerDAO;
 
@@ -197,6 +199,34 @@ public class CustomerService {
 
         return ans;
     }
+
+
+
+    public String deactivateUser(String email) {
+
+        Customer customer = customerDAO.findByEmail(email);
+        if (customer == null) {
+            throw new CustomerNotFound("Customer not exist");
+        }
+
+        Deactivate deactivate = deleteCustomerDAO
+                .findByCustomer_customerId(customer.getCustomerId());
+
+        if (deactivate == null) {
+            deactivate = Deactivate.builder()
+                    .customer(customer)
+                    .build();
+        }
+
+        deactivate.setActive(true);
+
+        deleteCustomerDAO.save(deactivate);
+
+        return "User Deactivated Successfully";
+    }
+
+
+
 
 
 }

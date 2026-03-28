@@ -3,6 +3,7 @@ package com.example.BigBazzarServer.DAO;
 import com.example.BigBazzarServer.Model.Seller;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
 
 
 public interface SellerDAO extends JpaRepository<Seller,Integer> {
@@ -12,4 +13,5 @@ public interface SellerDAO extends JpaRepository<Seller,Integer> {
     Seller findByGst(String gst);
 
 
+//    void delete(Optional<Seller> seller);
 }

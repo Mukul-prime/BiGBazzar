@@ -44,7 +44,7 @@ public class CityController {
         }
         catch (StateNotFounded e){
             log.warn("City not exist");
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
         }
     }
 
@@ -59,7 +59,7 @@ public class CityController {
         }
         catch (CityNotFound | AdminNotfound e){
             log.warn("City not found");
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_ACCEPTABLE);
         }
     }
 
@@ -75,7 +75,7 @@ public class CityController {
         }
         catch (CityNotFound | AdminNotfound e){
             log.warn("City not found");
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
 
         }
 

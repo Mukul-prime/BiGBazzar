@@ -27,10 +27,10 @@ public class NotificationController {
         try{
             String email = authentication.getName();
             String response = notificationService.notificationCretaed(notification , email);
-             return new ResponseEntity<>(response, HttpStatus.OK);
+             return new ResponseEntity<>(response, HttpStatus.CREATED);
 
         }catch (CustomerNotFound | IOException | AlreadyNotifiedByCustomer e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
 
     }

@@ -31,7 +31,7 @@ public class Reviews {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    // 🔥 AUTO SET createdAt before insert
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = new Date();

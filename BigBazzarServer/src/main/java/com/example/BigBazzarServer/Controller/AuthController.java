@@ -1,5 +1,6 @@
 package com.example.BigBazzarServer.Controller;
 
+import com.example.BigBazzarServer.DAO.DeleteCustomerDAO;
 import com.example.BigBazzarServer.DTO.Request.LoginDTO;
 import com.example.BigBazzarServer.DTO.Response.LoginResponseDTO;
 import com.example.BigBazzarServer.Service.AuthService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final DeleteCustomerDAO deleteCustomerDAO;
 
 
     private ResponseCookie generateCookie(String token) {
