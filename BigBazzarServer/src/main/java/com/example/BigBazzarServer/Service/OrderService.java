@@ -31,6 +31,7 @@ public class OrderService {
     private final ProductDAO productRepository;
     private final JavaMailSender mailSender;
     private final AdminDAO adminDAO;
+    private final ProductDAO productDAO;
 
 
     @Transactional
@@ -54,6 +55,8 @@ public class OrderService {
             Product product = productRepository.findById(itemReq.getProductId())
                     .orElseThrow(() -> new ProductNotFound("Product not found"));
 
+            product.setQuantity((product.getQuantity()-(long) itemReq.getQuantity()));
+            productDAO.save(product);
             return OrderItem.builder()
                     .product(product)
                     .quantity(itemReq.getQuantity())
@@ -63,6 +66,7 @@ public class OrderService {
         }).toList();
 
         order.setOrderItems(items);
+
 
 
         OrderEntity savedOrder = orderRepository.save(order);
@@ -79,6 +83,8 @@ public class OrderService {
         ).toList();
         Customer c =  savedOrder.getCustomer();
         sendEmail(c, responseItems);
+
+
 
 
         return OrderEntityResponse.builder()

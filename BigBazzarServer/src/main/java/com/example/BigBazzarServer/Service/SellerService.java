@@ -42,6 +42,8 @@ public class SellerService {
 
     @Autowired public SellerDeactives sellerDeactives;
 
+    @Autowired public ProductTransformers productTransformers;
+
 
     PasswordEncoder  passwordEncoder = new BCryptPasswordEncoder();
 
@@ -105,7 +107,7 @@ public class SellerService {
         }
 
         return products.stream()
-                .map(ProductTransformers::productToProductResponse)
+                .map(productTransformers::productToProductResponse)
                 .toList();
     }
 

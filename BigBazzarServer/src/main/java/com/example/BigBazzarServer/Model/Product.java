@@ -31,8 +31,9 @@ public class Product {
     @Column(length = 100)
     @Enumerated(EnumType.STRING)
     private Category category;
-    @Lob
-    private byte[] image;
+
+
+
 
     @Column(name = "expire_Date")
     private LocalDate expiryDate;
@@ -46,11 +47,22 @@ public class Product {
     @JoinColumn(name = "seller_id")
     private Seller seller;
 
+    @Column(nullable = false)
+    private long quantity;
+
     @OneToMany(mappedBy = "product",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
 
     private List<Reviews> reviewsList;
+
+
+    @OneToMany(
+            mappedBy = "product",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<ProductImages> productImagesList;
 }
 
 

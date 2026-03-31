@@ -6,7 +6,7 @@
   ## Installation 
 
 
- ### If you can use this Service the install this service
+ ### Tools
 
  #### Use Framework
        . Intellijidea
@@ -48,6 +48,9 @@
   7. Admin pannel to admin can have a access to power a run some curd operations . banner image or text , add or detele new city or state or also languages . 
 
   8. I use spring secuity with jwt to authencation or authorize person can use our services . 
+
+
+  9. User have a deactive account control if user deactivate own account before the 21 days is relogin your account should not delete if you again gave permission to deactivate account .
 
 
 

@@ -3,6 +3,8 @@ package com.example.BigBazzarServer.DTO.Response;
 import com.example.BigBazzarServer.utlity.Enum.Category;
 import lombok.*;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -15,8 +17,9 @@ public class ProductResponse {
     private double price;
     private String description;
     private Category category;
-    private String bannerurl;
+    private List<String> bannerurl;
     private String day;
+    private long quantity;
 
 
 }

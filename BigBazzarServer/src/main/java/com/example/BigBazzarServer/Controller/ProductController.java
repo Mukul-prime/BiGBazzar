@@ -52,16 +52,7 @@ public class ProductController {
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
-//
-//    @PostMapping("/bulk")
-//    public ResponseEntity<String> addMultipleProducts(
-//            @RequestBody List<ProductRequest> productRequests, Authentication authentication) {
-//
-//        String email = authentication.getName();
-//        String response = productService.PutallDataProductonlyfordevelopment_mode(productRequests,email);
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//
-//    }
+
 
 //    Change the product Name
     @PutMapping("/Productcn")
@@ -98,7 +89,7 @@ public class ProductController {
         log.info("Changing product price");
         try{
             String email =   authentication.getName();
-            String response = productService.chnageDescritpon(email, changeProductDesciption);
+            String response = productService.changeDescription(email, changeProductDesciption);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         catch (SellerNotFound | ProductNotFound e){
@@ -108,25 +99,25 @@ public class ProductController {
     }
 
 //change product image
-    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> changeproductImage(Authentication authentication , @ModelAttribute ProductChangeImages productChangeImages){
-        log.info("Changing product price");
-        try{
-            String email =   authentication.getName();
-            String response = productService.chamge_image(email, productChangeImages);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        catch (SellerNotFound | ProductNotFound  | IOException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+//    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public ResponseEntity<?> changeproductImage(Authentication authentication , @ModelAttribute ProductChangeImages productChangeImages){
+//        log.info("Changing product price");
+//        try{
+//            String email =   authentication.getName();
+//            String response = productService.chamge_image(email, productChangeImages);
+//            return new ResponseEntity<>(response, HttpStatus.OK);
+//        }
+//        catch (SellerNotFound | ProductNotFound  | IOException e){
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//
+//    }
 
-    }
-
-    @GetMapping("/days/{days}")
-    public ResponseEntity<?> getexpireProduct(@PathVariable int days){
+    @GetMapping("/days/")
+    public ResponseEntity<?> getexpireProduct(){
         log.info("Getting expire product");
         try{
-            List<ProductResponse> data = productService.getexpireProduct(days);
+            List<ProductResponse> data = productService.getExpiredProducts();
             return new ResponseEntity<>(data, HttpStatus.OK);
 
         }

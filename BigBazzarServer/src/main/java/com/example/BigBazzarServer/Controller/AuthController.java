@@ -42,7 +42,7 @@ public class AuthController {
                 .body(response);
     }
 
-    @PostMapping("/customer/login")
+    @PostMapping(" ")
     public ResponseEntity<LoginResponseDTO> customerLogin(
             @RequestBody LoginDTO dto) {
 
